@@ -6,5 +6,5 @@ CREATE TABLE user (
     id TEXT PRIMARY KEY UNIQUE,
     email TEXT,
     password TEXT,
-    token TEXT DEFAULT NULL NOT NULL
+    token TEXT
 );
