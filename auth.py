@@ -1,7 +1,7 @@
 import secrets
 from functools import wraps
 import requests
-from flask import make_response, redirect
+from flask import make_response, redirect, flash
 
 class Auth:
     def __init__(self, request, api_uri, login_uri, redirect_uri):
@@ -19,17 +19,20 @@ class Auth:
         @wraps(func)
         def wrapper(*args, **kwargs):
             res = func(*args, **kwargs)
-
+            msg = None
             if self.request.method == 'POST':
                 dic_form = dict(self.request.form)
                 dic_form['token'] = self.token
 
                 res_api = requests.put(self.api_uri, data=dic_form).json()
+                msg = res_api.get('msg')
                 if res_api['success']:
                     res = make_response(redirect(self.redirect_uri))
                     res.set_cookie('token', res_api['cookie']['token'])
                     res.set_cookie('id', res_api['cookie']['id'])
 
+            if msg:
+                flash(msg, category='danger')
             return res
         return wrapper
 

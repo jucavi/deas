@@ -16,16 +16,22 @@ def login():
     res = make_response(render_template('login.html'))
     return res
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    msg = None
     if request.method == 'POST':
         res = requests.post('http://localhost:3000/api/register', data=request.form).json()
-        flash(res['msg'])
+        msg = res.get('msg')
         if res['success']:
             # requests.post to login?
+            if msg:
+                flash(msg, category='success')
             return redirect(url_for('login'))
-
+    if msg:
+        flash(msg, category='danger')
     return render_template('register.html')
+
 
 @app.route('/secret')
 @auth.authorize
