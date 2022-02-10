@@ -42,9 +42,9 @@ def api():
     return 'api'
 
 
-@app.route('/api/auth', methods=['GET', 'POST'])
+@app.route('/api/auth', methods=['GET', 'PUT'])
 def auth():
-    if request.method == 'POST':
+    if request.method == 'PUT':
         email = request.form.get('email')
         password = request.form.get('password')
         token = request.form.get('token')

@@ -6,8 +6,8 @@ from flask import make_response, redirect
 class Auth:
     def __init__(self, request, api_uri, login_uri, redirect_uri):
         self.request = request
-        self.login_uri = login_uri
         self.api_uri = api_uri
+        self.login_uri = login_uri
         self.redirect_uri = redirect_uri
 
     @property
@@ -21,10 +21,10 @@ class Auth:
             res = func(*args, **kwargs)
 
             if self.request.method == 'POST':
-                fake_form = dict(self.request.form)
-                fake_form['token'] = self.token
-                
-                res_api = requests.post(self.api_uri, data=fake_form).json()
+                dic_form = dict(self.request.form)
+                dic_form['token'] = self.token
+
+                res_api = requests.put(self.api_uri, data=dic_form).json()
                 if res_api['success']:
                     res = make_response(redirect(self.redirect_uri))
                     res.set_cookie('token', res_api['cookie']['token'])
