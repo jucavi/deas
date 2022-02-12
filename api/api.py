@@ -93,8 +93,8 @@ def register():
 def deas():
     try:
         form = request.form
-        lat, long = form['lat'], form['long']
-        size = form['size']
+        lat, long = float(form['lat']), float(form['lon'])
+        size = int(form['size'])
         deas = get_deas()
     except:
         pass
@@ -102,13 +102,14 @@ def deas():
         if deas:
             deas_by_distance = []
             for dea in deas:
-                pos_x, pos_y = utm.from_latlon(lat, long)
+                pos_x, pos_y, *_ = utm.from_latlon(lat, long)
                 dea_x, dea_y = dea['x'], dea['y']
                 distance = ((pos_x - dea_x) ** 2 + (pos_y - dea_y) ** 2) ** .5
                 deas_by_distance.append([*tuple(dea)[:3], distance])
             deas_by_distance.sort(key=lambda x: x[-1])
             return {'success': True, 'deas': deas_by_distance[:size]}
     return {'success': False, 'deas': []}
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)

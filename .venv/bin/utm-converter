@@ -1,4 +1,4 @@
-#!/Users/kaos/workspace/CICE_Web/dea/.venv/bin/python3.9
+#!/Users/kaos/workspace/CICE_Web/deas/.venv/bin/python3
 
 import argparse
 import utm

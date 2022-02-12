@@ -1,13 +1,14 @@
 from flask import Flask, request, make_response, redirect, render_template, flash, url_for
 import requests
 import sys
-sys.path.append('/Users/kaos/workspace/CICE_Web/dea')
+sys.path.append('/Users/kaos/workspace/CICE_Web/deas/')
 from auth import Auth
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
+import json
 
 app = Flask(__name__)
 app.secret_key = 't0p s3cr3t'
-CORS(app, supports_credentials=True)
+CORS(app)
 auth = Auth(request, 'http://localhost:3000/api/auth', 'http://localhost:5000/login', 'http://localhost:5000/secret')
 
 
@@ -50,14 +51,17 @@ def secret():
 
 
 @app.route('/deas', methods=['GET', 'POST'])
-@cross_origin(methods=['POST'], expose_headers='*')
 def deas():
+    print('in deas')
     if request.method == 'POST':
-        print(request.form)
-        print(request.args)
-        print(request.get_json())
-        print(request.data)
-        # lat, long = form['lat'], form['long']
+        try:
+            form = request.get_json()
+            # lat, lon, size = float(form['lat']), float(form['lon']), form['size']
+            # print('data', {'lat': lat, 'lon': lon, 'size': size})
+            res = requests.post('http://localhost:3000/api/deas', data=form).json()
+            return res
+        except Exception as e:
+            print(e)
     return render_template('deas.html')
 
 
