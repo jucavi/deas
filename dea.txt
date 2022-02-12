@@ -1,0 +1,5 @@
+id: codigo_dea
+name: direccion_ubicacion
+adress: direccion_via_nombre + direccion_portal_numero
+x: direccion_coordernada_x
+y: direccion_coordernada_y

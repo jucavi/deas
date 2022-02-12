@@ -8,3 +8,11 @@ CREATE TABLE user (
     password TEXT,
     token TEXT
 );
+
+CREATE TABLE dea (
+    id TEXT PRIMARY KEY UNIQUE,
+    name TEXT,
+    address TEXT,
+    x INTEGER,
+    y INTEGER
+);

@@ -1,7 +1,9 @@
+from crypt import methods
 import db
 from flask import Flask, request
 import uuid
 from flask_cors import CORS
+import utm
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -34,7 +36,11 @@ def get_token(_id):
 def create_user(email, password):
     with db.get_db() as con:
         con.execute('INSERT INTO user VALUES (?, ?, ?, ?);', (str(uuid.uuid4()), email, generate_password_hash(password), None))
-        con.commit()
+        # con.commit()
+
+def get_deas():
+    with db.get_db() as con:
+        return con.execute('SELECT * FROM dea;').fetchall()
 
 
 @app.route('/api')
@@ -83,7 +89,26 @@ def register():
     return {'success': False, 'msg': msg}
 
 
-
+@app.route('/api/deas', methods=['POST'])
+def deas():
+    try:
+        form = request.form
+        lat, long = form['lat'], form['long']
+        size = form['size']
+        deas = get_deas()
+    except:
+        pass
+    else:
+        if deas:
+            deas_by_distance = []
+            for dea in deas:
+                pos_x, pos_y = utm.from_latlon(lat, long)
+                dea_x, dea_y = dea['x'], dea['y']
+                distance = ((pos_x - dea_x) ** 2 + (pos_y - dea_y) ** 2) ** .5
+                deas_by_distance.append([*tuple(dea)[:3], distance])
+            deas_by_distance.sort(key=lambda x: x[-1])
+            return {'success': True, 'deas': deas_by_distance[:size]}
+    return {'success': False, 'deas': []}
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)
