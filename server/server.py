@@ -1,7 +1,7 @@
 from flask import Flask, request, make_response, redirect, render_template, flash, url_for
 import requests
 import sys
-sys.path.append('/Users/kaos/workspace/CICE_Web/deas/')
+sys.path.append('/Users/kaos/workspace/CICE_Web/dea/')
 from auth import Auth
 from flask_cors import CORS
 import json

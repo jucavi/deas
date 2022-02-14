@@ -6,7 +6,19 @@
 {% block header %}Deas{% endblock %}
 
 {% block content %}
-<ul id="deas"></ul>
+<div class="container">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Address</th>
+      <th scope="col">Distance</th>
+    </tr>
+  </thead>
+  <tbody id="deas">
+  </tbody>
+</table>
+</div>
 {% endblock %}
 
 {% block script %}
