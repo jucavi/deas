@@ -40,8 +40,15 @@ def create_user(email, password):
 
 def get_deas():
     with db.get_db() as con:
-        return con.execute('SELECT * FROM dea;').fetchall()
+        return con.execute('SELECT * FROM deas;').fetchall()
 
+def distance(user_x, user_y, dea_x, dea_y):
+    dist = ((user_x - dea_x) ** 2 + (user_y - dea_y) ** 2) ** .5
+    return round(dist / 1000, 2)
+
+def utm_user(lat, lon):
+    user_x, user_y, *_ = utm.from_latlon(lat, lon)
+    return user_x, user_y
 
 @app.route('/api')
 def api():
@@ -93,21 +100,27 @@ def register():
 def deas():
     try:
         form = request.form
-        lat, long = float(form['lat']), float(form['lon'])
+        lat, lon = float(form['lat']), float(form['lon'])
         size = int(form['size'])
         deas = get_deas()
     except:
         pass
     else:
-        if deas:
-            deas_by_distance = []
-            for dea in deas:
-                pos_x, pos_y, *_ = utm.from_latlon(lat, long)
-                dea_x, dea_y = dea['x'], dea['y']
-                distance = ((pos_x - dea_x) ** 2 + (pos_y - dea_y) ** 2) ** .5
-                deas_by_distance.append([*tuple(dea), round(distance / 1000, 2)])
-            deas_by_distance.sort(key=lambda x: x[-1])
-            return {'success': True, 'deas': deas_by_distance[:size]}
+        deas_by_distance = []
+        for dea in deas:
+            try:
+                dea_x = dea['x']
+                dea_y = dea['y']
+                name, address = tuple(dea)[1:3]
+                d_lat, d_lon = utm.to_latlon(dea_x, dea_y, 30, 'T')
+                dist = distance(*utm_user(lat, lon), dea_x, dea_y)
+                deas_by_distance.append((name, address, d_lat, d_lon, dist))
+            except Exception as e:
+                print(e)
+
+        deas_by_distance.sort(key=lambda x: x[-1])
+
+        return {'success': True, 'deas': deas_by_distance[:size]}
     return {'success': False, 'deas': []}
 
 

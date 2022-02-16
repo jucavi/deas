@@ -29,8 +29,8 @@ def load_data():
 def generate_db_data(deas):
     db_data = map(lambda dea:(
         dea['codigo_dea'],
-        dea['direccion_ubicacion'],
-        f"{dea['direccion_via_nombre']}, {dea['direccion_portal_numero']}",
+        dea['direccion_ubicacion'].title(),
+        f"{dea['direccion_via_nombre']}, {dea['direccion_portal_numero']}".title(),
         int(dea['direccion_coordenada_x']),
         int(dea['direccion_coordenada_y'])), deas)
 
@@ -41,13 +41,16 @@ def populate_db(db_data):
     try:
         for dea in db_data:
             with con:
-                con.execute('''INSERT INTO dea VALUES (?, ?, ?, ?, ?);''', (*dea,))
+                con.execute('''INSERT INTO deas VALUES (?, ?, ?, ?, ?);''', (*dea,))
         print('All data saved in deas.db')
     except Exception as e:
         print(e)
 
 
 if __name__ == '__main__':
+    with con:
+        con.execute('DROP TABLE IF EXISTS deas;')
+        con.execute('CREATE TABLE deas (id TEXT UNIQUE PRIMARY KEY, name TEXT, address TEXT, x REAL, y REAL);')
     deas = load_data().get('data')
     db_data = generate_db_data(deas)
     if deas:

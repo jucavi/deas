@@ -4,7 +4,6 @@ import sys
 sys.path.append('/Users/kaos/workspace/CICE_Web/dea/')
 from auth import Auth
 from flask_cors import CORS
-import json
 
 app = Flask(__name__)
 app.secret_key = 't0p s3cr3t'
@@ -50,19 +49,17 @@ def secret():
     return '<h1>Secret</h1>'
 
 
-@app.route('/deas', methods=['GET', 'POST'])
-def deas():
-    print('in deas')
+@app.route('/finder', methods=['GET', 'POST'])
+def finder():
     if request.method == 'POST':
         try:
-            form = request.get_json()
-            # lat, lon, size = float(form['lat']), float(form['lon']), form['size']
-            # print('data', {'lat': lat, 'lon': lon, 'size': size})
+            form = request.form
             res = requests.post('http://localhost:3000/api/deas', data=form).json()
             return res
+            # return render_template('finder.html', deas=res['deas'])
         except Exception as e:
             print(e)
-    return render_template('deas.html')
+    return render_template('finder.html', deas=[])
 
 
 
