@@ -49,6 +49,7 @@ def secret():
     return '<h1>Secret</h1>'
 
 
+@app.route('/')
 @app.route('/finder', methods=['GET', 'POST'])
 def finder():
     if request.method == 'POST':
@@ -62,6 +63,9 @@ def finder():
     return render_template('finder.html', deas=[])
 
 
+@app.route('/<_>')
+def missing(_):
+    return url_for('finder')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
