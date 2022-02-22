@@ -1,4 +1,3 @@
-from crypt import methods
 import db
 from flask import Flask, request
 import uuid
@@ -36,7 +35,7 @@ def get_token(_id):
 def create_user(email, password):
     with db.get_db() as con:
         con.execute('INSERT INTO user VALUES (?, ?, ?, ?);', (str(uuid.uuid4()), email, generate_password_hash(password), None))
-        # con.commit()
+        con.commit()
 
 def get_deas():
     with db.get_db() as con:

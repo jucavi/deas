@@ -10,7 +10,7 @@ deas_json_file = path.join(cwd, 'deas.json')
 
 
 def load_data():
-    if deas_json_file:
+    if path.exists(deas_json_file):
         with open(deas_json_file) as f:
             print('Loading json file...')
             deas = json.load(f)
