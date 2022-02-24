@@ -26,9 +26,6 @@ def register():
         msg = res.get('msg')
         if res['success']:
             return redirect(url_for('login'), code=307)
-            # if msg:
-            #     flash(msg, category='success')
-            # return redirect(url_for('login'))
     if msg:
         flash(msg, category='danger')
     return render_template('register.html')
@@ -39,8 +36,7 @@ def logout():
     res = make_response(redirect(url_for('login')))
     res.set_cookie('token', '')
     res.set_cookie('id', '')
-
-    return res
+    return redirect(url_for('login'))
 
 
 @app.route('/secret')
