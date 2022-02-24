@@ -10,7 +10,7 @@ deas_json_file = path.join(cwd, 'deas.json')
 
 
 def load_data():
-    if deas_json_file:
+    if path.exists(deas_json_file):
         with open(deas_json_file) as f:
             print('Loading json file...')
             deas = json.load(f)
@@ -19,7 +19,7 @@ def load_data():
             deas = requests.get(url).json()
             print('DEAS successfully downloaded')
             with open(path.join(cwd, 'deas.json'), 'w') as f:
-                json.dump(deas, f, indent=4)
+                json.dump(deas, f, indent=4, ensure_ascii=False)
         except Exception as e:
             print('Error:', e)
 
