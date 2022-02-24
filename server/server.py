@@ -1,9 +1,13 @@
 from flask import Flask, request, make_response, redirect, render_template, flash, url_for
 import requests
-import sys
-sys.path.append('/Users/kaos/workspace/CICE_Web/dea/')
-from auth import Auth
 from flask_cors import CORS
+import os
+import sys
+
+path = os.getcwd()
+
+sys.path.append(os.path.dirname(path))
+from auth import Auth
 
 app = Flask(__name__)
 app.secret_key = 't0p s3cr3t'
